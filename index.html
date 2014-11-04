@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="ja">
+	<head>
+	<meta charset="UTF-8">
+		<title>Access SQL Convert To SQL Server SQL</title>
+		<link rel="stylesheet" type="text/css" href="./test.css">
+		<script src="./main.js"></script>
+	</head>	
+	<body>
+		<label>Enter Access SQL here.</label><br />
+		<form name="form">
+			<textarea id="input_area" rows="4" cols="150" wrap="off"></textarea><br />
+			<input type="radio" name="tab_select" id="tab" />タブでタブ
+			<input type="radio" name="tab_select" id="space" checked="true" />スペース4つ<br/>
+			<input type="button" value = "go" onclick="call_convert()" /><br/>
+			<textarea id="output_area" rows="20" cols="150" wrap="off"></textarea>
+		</form>
+	<body>
+	<script type="text/javascript">
+		document.form.input_area.value = "SELECT Q_月別画像数.*, Q_年別画像数.年総数, Int(IIf(Q_月別画像数.Year=Year(Date()),[月総数]/((12-Month(Date()))*[月平均数]+[年総数])*160,[月総数]/[年総数]*160)) AS 印刷適正数, Q_各年の撮影月の数.月の数, Int([年総数]/[月の数]) AS 月平均数\n" +
+			"FROM (Q_月別画像数 INNER JOIN Q_年別画像数 ON Q_月別画像数.Year = Q_年別画像数.Year) INNER JOIN Q_各年の撮影月の数 ON Q_年別画像数.Year = Q_各年の撮影月の数.Year;"
+
+		function call_convert(){
+			var tab_type = 0;
+			if (document.form.space.checked) tab_type = 1;
+			var rtn = convert(document.form.input_area.value, tab_type);
+			document.form.output_area.value = rtn;	
+		}
+	</script>

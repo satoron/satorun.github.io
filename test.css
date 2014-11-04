@@ -1,0 +1,27 @@
+/* --- 表全体 --- */
+table {
+/*width: 650px; /* 表の幅 */
+margin-bottom: 30px; /* 表の下マージン */
+border: 1px #c0c0c0 solid; /* 大枠の境界線 */
+border-collapse: collapse;
+font-size: 80%;
+}
+
+/* --- セル --- */
+th, td {
+/*width: 20%;  /* セルの幅（セルの幅を均等にする場合） */
+padding: 6px 8px; /* セルのパディング（上下、左右） */
+text-align;center;
+border: 1px #c0c0c0 solid; /* セルの境界線 */
+}
+
+/* --- 見出しセル --- */
+th {
+background-color: #deefff; /* 見出しセルの背景色 */
+text-align: center;
+}
+
+/* --- データセル --- */
+td {
+background-color: #ffffff; /* データセルの背景色 */
+}
