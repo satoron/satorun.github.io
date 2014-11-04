@@ -54,6 +54,24 @@ function from_break(text, keyword, tab_code, tab_count){
 	return text;
 };
 
+function parentheses_remove(text){
+	var pstack = [];
+	var kw = "";
+	for (var i = 0; i < text.length; i++){
+		switch text[i]
+			case "(":
+				pstack.push(i);
+				break;
+			case ")":
+				break;
+			case " ":
+				kw = "";
+				break;
+			default:
+		}
+	}
+};
+
 String.prototype.repeat = function(num) {
 	for (var str = ""; (this.length * num) > str.length; str += this);
 	return str;
