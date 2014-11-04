@@ -17,9 +17,10 @@
 		</form>
 	<body>
 	<script type="text/javascript">
+		/*
 		document.form.input_area.value = "SELECT Q_月別画像数.*, Q_年別画像数.年総数, Int(IIf(Q_月別画像数.Year=Year(Date()),[月総数]/((12-Month(Date()))*[月平均数]+[年総数])*160,[月総数]/[年総数]*160)) AS 印刷適正数, Q_各年の撮影月の数.月の数, Int([年総数]/[月の数]) AS 月平均数\n" +
 			"FROM (Q_月別画像数 INNER JOIN Q_年別画像数 ON Q_月別画像数.Year = Q_年別画像数.Year) INNER JOIN Q_各年の撮影月の数 ON Q_年別画像数.Year = Q_各年の撮影月の数.Year;"
-
+		*/
 		function call_convert(){
 			var tab_type = 0;
 			if (document.form.space.checked) tab_type = 1;

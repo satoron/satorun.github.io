@@ -29,6 +29,9 @@ function convert(in_text, tab_type){
 			row_body = from_break(row_body, " ON ", tab_code, 2);	
 			row_body = row_body.replace(/\(|\)/g,"");
 			out_text += row_body + "\n";
+		}else if (row_head == "WHERE"){
+			row_body = parentheses_remove(row_body);
+			out_text += row_body + "\n";
 		}else{
 			out_text += row_body + "\n";
 		}
@@ -55,21 +58,53 @@ function from_break(text, keyword, tab_code, tab_count){
 };
 
 function parentheses_remove(text){
+	var arr_text = text.split("");
+	var rtn_text = "";
 	var pstack = [];
+	var rmv_list = [];
 	var kw = "";
-	for (var i = 0; i < text.length; i++){
-		switch text[i]
+	for (var i = 0; i < arr_text.length; i++){
+		switch (arr_text[i]){
 			case "(":
 				pstack.push(i);
+				console.log("push:" + i);
 				break;
 			case ")":
+				if (pstack.length > 0){
+					console.log("rmv_list.push:" + pstack[pstack.length-1] + ";i=" + i);
+					rmv_list.push(pstack[pstack.length-1]);
+					pstack.pop();
+					rmv_list.push(i);
+				}
 				break;
 			case " ":
+				if (kw = "AND" || kw == "OR"){
+					pstack.pop;
+				}
 				kw = "";
 				break;
 			default:
+				kw += arr_text[i];
 		}
 	}
+	console.log("arr_text");
+	for (var i = 0; i < arr_text.length; i++){
+		console.log(arr_text[i]);
+	}
+	console.log("rmv_list");
+	for (var i = 0; i < rmv_list; i++){
+		console.log(rmv_list[i]);
+	}
+	console.log("arr_text.length:" + arr_text.length);
+	for (var i = 0; i < arr_text.length; i++){
+		if (rmv_list.indexOf(i) >= 0) {
+			console.log("rmv_list.indexOf:" + i);
+			continue;
+		}
+		rtn_text += arr_text[i];
+	}
+
+	return rtn_text;
 };
 
 String.prototype.repeat = function(num) {
