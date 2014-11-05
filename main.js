@@ -67,18 +67,16 @@ function parentheses_remove(text){
 		switch (arr_text[i]){
 			case "(":
 				pstack.push(i);
-				console.log("push:" + i);
 				break;
 			case ")":
 				if (pstack.length > 0){
-					console.log("rmv_list.push:" + pstack[pstack.length-1] + ";i=" + i);
 					rmv_list.push(pstack[pstack.length-1]);
 					pstack.pop();
 					rmv_list.push(i);
 				}
 				break;
 			case " ":
-				if (kw = "AND" || kw == "OR"){
+				if (kw = "And" || kw == "Or"){
 					pstack.pop;
 				}
 				kw = "";
@@ -86,19 +84,9 @@ function parentheses_remove(text){
 			default:
 				kw += arr_text[i];
 		}
-	}
-	console.log("arr_text");
-	for (var i = 0; i < arr_text.length; i++){
-		console.log(arr_text[i]);
-	}
-	console.log("rmv_list");
-	for (var i = 0; i < rmv_list; i++){
-		console.log(rmv_list[i]);
-	}
-	console.log("arr_text.length:" + arr_text.length);
+	};
 	for (var i = 0; i < arr_text.length; i++){
 		if (rmv_list.indexOf(i) >= 0) {
-			console.log("rmv_list.indexOf:" + i);
 			continue;
 		}
 		rtn_text += arr_text[i];
