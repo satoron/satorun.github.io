@@ -30,7 +30,8 @@ function convert(in_text, tab_type){
 			row_body = row_body.replace(/\(|\)/g,"");
 			out_text += row_body + "\n";
 		}else if (row_head == "WHERE"){
-			row_body = parentheses_remove(row_body);
+			row_body = parentheses_remove(row_body); 
+			row_body = where_break(row_body);
 			out_text += row_body + "\n";
 		}else{
 			out_text += row_body + "\n";
@@ -93,6 +94,38 @@ function parentheses_remove(text){
 	}
 
 	return rtn_text;
+};
+
+function where_break(text){
+	var tab_level = 1;
+	var rtn_text ="";
+	var token = "";
+	for (var i = 0; i < text.length; i++){
+		if (text[i] == "("){
+			rtn_text += text[i] + "\n";
+			rtn_text += tab_code.repeat(tab_level);
+			tab_level++;
+		}else if (text[i] == ")"){
+			tab_level--;
+			rtn_text += "\n" + tab_code.repeat(tab_level);
+			rtn_text += text[i];
+		}else if (text[i] == " "){
+			if (token == "And" || token == "OR"){
+				if (btw_flg){
+					btw_flg = false;
+				}else{
+					rtn_text += "\n" + tab_code.repeat(tab_level);
+				}
+			}else if (token == "Between"){
+				btw_flg = true;
+			}
+			rtn_text += token + text[i];
+			token = "";
+		}else{
+			token += text[i];
+		}
+	}
+	return rtn_text += token;
 };
 
 String.prototype.repeat = function(num) {
