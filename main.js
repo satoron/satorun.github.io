@@ -17,11 +17,12 @@ function convert(in_text, tab_type){
 		out_text += row_head + " "; 
 
 		if (row_head == "SELECT" || row_head == "SET"){
-			var fields = row_body.split(",");
-			out_text += "\n" + tab_code + fields[0] + "\n";
-			for (var j = 1; j < fields.length; j++){
-				out_text += tab_code + ", " + fields[j] + "\n";
-			}	
+			out_text += comma_break(row_body, tab_code);
+		}else if (row_head == "INSERT"){
+			if (row_body.indexOf("(") >=0){
+				
+			}
+			out_text += commma_break(row_body, tab_code);
 		}else if (row_head == "FROM"){
 			row_body = from_break(row_body, " INNER JOIN ", tab_code, 1);
 			row_body = from_break(row_body, " LEFT JOIN ", tab_code, 1);
@@ -38,6 +39,16 @@ function convert(in_text, tab_type){
 	}
 
 	return out_text;	
+};
+
+function comma_break(text, tab_code){
+	var fields = text.split(",");
+	var rtn_text = "";
+	rtn_text += "\n" + tab_code + fields[0] + "\n";
+	for (var j = 1; j < fields.length; j++){
+		rtn_text += tab_code + ", " + fields[j] + "\n";
+	}	
+	return rtn_text;
 };
 
 function from_break(text, keyword, tab_code, tab_count){
@@ -93,6 +104,10 @@ function parentheses_remove(text){
 	}
 
 	return rtn_text;
+};
+
+function doublequote_remove(text){
+
 };
 
 String.prototype.repeat = function(num) {
