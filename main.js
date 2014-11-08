@@ -17,12 +17,16 @@ function convert(in_text, tab_type){
 		out_text += row_head + " "; 
 
 		if (row_head == "SELECT" || row_head == "SET"){
+			if (row_body.indexOf("DISTINCT") >= 0){
+				out_text += row_body.substring(0,9);
+			}
 			out_text += comma_break(row_body, tab_code);
 		}else if (row_head == "INSERT"){
 			if (row_body.indexOf("(") >=0){
-				
+				out_text += row_body.substring(0, row_body.indexOf("(")) + "\n"
+				row_body = commma_break(row_body, tab_code); 
 			}
-			out_text += commma_break(row_body, tab_code);
+			out_text += row_body;
 		}else if (row_head == "FROM"){
 			row_body = from_break(row_body, " INNER JOIN ", tab_code, 1);
 			row_body = from_break(row_body, " LEFT JOIN ", tab_code, 1);
@@ -30,7 +34,7 @@ function convert(in_text, tab_type){
 			row_body = from_break(row_body, " ON ", tab_code, 2);	
 			row_body = row_body.replace(/\(|\)/g,"");
 			out_text += row_body + "\n";
-		}else if (row_head == "WHERE"){
+		}else if (row_head == "WHERE" || row_head == "HAVING"){
 			row_body = parentheses_remove(row_body); 
 			row_body = where_break(row_body);
 			out_text += row_body + "\n";
@@ -38,6 +42,9 @@ function convert(in_text, tab_type){
 			out_text += row_body + "\n";
 		}
 	}
+
+	out_text = wildcard_replace(out_text);
+	out_text = doublequote_replace(out_text);
 
 	return out_text;	
 };
@@ -107,10 +114,6 @@ function parentheses_remove(text){
 	return rtn_text;
 };
 
-<<<<<<< HEAD
-function doublequote_remove(text){
-
-=======
 function where_break(text){
 	var tab_level = 1;
 	var rtn_text ="";
@@ -141,7 +144,22 @@ function where_break(text){
 		}
 	}
 	return rtn_text += token;
->>>>>>> origin/master
+};
+
+function wildcard_replace(text){
+	text = text.replace(/(Like \")(.*?)\*(.*?)(\")/g,"$1$2%$3$4");
+		text = text.replace(/\*/g,"%");
+	//text = text.replace(/(Like \".*)\*(.*\")/g,"$1%$2");
+	text = text.replace(/(Like \".*)\?/g,"$1_");
+	text = text.replace(/(Like \".*)\?(.*\")/g,"$1_$2");
+	return text;
+};
+
+function doublequote_replace(text){
+	text = text.replace(/(\s|\()\"/g,"$1'");
+	text = text.replace(/\"(\s|\)|\;)/g,"'$1");
+	text = text.replace(/\"\"/g,"\"");
+	return text;
 };
 
 String.prototype.repeat = function(num) {
