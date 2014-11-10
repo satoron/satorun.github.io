@@ -147,11 +147,12 @@ function where_break(text){
 };
 
 function wildcard_replace(text){
-	text = text.replace(/(Like \")(.*?)\*(.*?)(\")/g,"$1$2%$3$4");
-		text = text.replace(/\*/g,"%");
-	//text = text.replace(/(Like \".*)\*(.*\")/g,"$1%$2");
-	text = text.replace(/(Like \".*)\?/g,"$1_");
-	text = text.replace(/(Like \".*)\?(.*\")/g,"$1_$2");
+	while (text.match(/(Like \".*(?!\[))\*((?!\]).*\")/g)){
+		text = text.replace(/(Like \".*(?!\[))\*((?!\]).*\")/g,"$1%$2");	
+	}	
+	while (text.match(/(Like \".*)[^\[]\?[^\]](.*\")/g)){
+		text = text.replace(/(Like \".*)\*(.*\")/g,"$1%$2");	
+	}
 	return text;
 };
 
