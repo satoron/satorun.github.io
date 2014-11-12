@@ -97,7 +97,6 @@ function parentheses_remove(text){
 			case " ":
 				console.log(kw);
 				if (kw == "And" || kw == "Or" || kw.toUpperCase() == "FROM"){
-					console.log(1);
 					pstack.pop;
 				}
 				kw = "";
@@ -120,6 +119,7 @@ function where_break(text){
 	var tab_level = 1;
 	var rtn_text ="";
 	var token = "";
+	var btw_flg = false;
 	for (var i = 0; i < text.length; i++){
 		if (text[i] == "("){
 			rtn_text += text[i] + "\n";
