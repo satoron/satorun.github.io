@@ -3,17 +3,29 @@
 	<head>
 	<meta charset="UTF-8">
 		<title>Access SQL Convert To SQL Server SQL</title>
-		<link rel="stylesheet" type="text/css" href="./test.css">
+		<!-- link rel="stylesheet" type="text/css" href="./test.css" -->
+		<style type="text/css">
+			ul{
+				margin-left: 0;
+				padding-left: 0;
+			}
+			li{
+				display: inline;
+				margin: 10px;
+			}
+		</style>
 		<script src="./main.js"></script>
 	</head>	
 	<body>
-		<label>Enter Access SQL here.</label><br />
 		<form name="form">
-			<textarea id="input_area" rows="4" cols="150" wrap="off"></textarea><br />
+			<label>Enter Access SQL here.</label>
 			<input type="radio" name="tab_select" id="tab" />タブでタブ
-			<input type="radio" name="tab_select" id="space" checked="true" />スペース4つ<br/>
+			<input type="radio" name="tab_select" id="space" checked="true" />スペース4つ
 			<input type="button" value = "go" onclick="call_convert()" /><br/>
-			<textarea id="output_area" rows="20" cols="150" wrap="off"></textarea>
+			<ul>
+				<li><textarea id="input_area" rows="20" cols="60" wrap="off"></textarea></li>
+				<li><textarea id="output_area" rows="20" cols="60" wrap="off"></textarea></li>
+			</ul>
 		</form>
 	<body>
 	<script type="text/javascript">

@@ -95,7 +95,9 @@ function parentheses_remove(text){
 				}
 				break;
 			case " ":
-				if (kw = "And" || kw == "Or"){
+				console.log(kw);
+				if (kw == "And" || kw == "Or" || kw.toUpperCase() == "FROM"){
+					console.log(1);
 					pstack.pop;
 				}
 				kw = "";
