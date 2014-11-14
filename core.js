@@ -9,6 +9,8 @@ function convert(in_text, tab_type){
 	var literal_start = false;
 	var ppdfn_start = false; 
 	var pstack = [];
+	var tab_level= 0;
+	var literal_start = false;
 
 	if (tab_type = 0){
 		tab_code = "\t";
@@ -68,7 +70,6 @@ function convert(in_text, tab_type){
 
 	return out_text;
 };
-
 
 String.prototype.repeat = function(num) {
 	for (var str = ""; (this.length * num) > str.length; str += this);
