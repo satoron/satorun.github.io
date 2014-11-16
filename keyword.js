@@ -1,5 +1,5 @@
 var primary_kw = [
-	"SLELECT"
+	"SELECT"
 	, "INSERT"
 	, "UPDATE"
 	, "SET"
@@ -23,6 +23,7 @@ var secondary_kw = [
 	, "ON"
 	, "AND"
 	, "OR"
+	, "LIKE"
 	, "BY"
 ];
 

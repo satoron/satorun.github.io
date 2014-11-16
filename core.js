@@ -3,14 +3,16 @@ function convert(in_text, tab_type){
 	var out_text = "";
 	var section_kw = "";
 	var operator_kw = "";
-	var buf_kw = "";
+	var token = "";
 	var tab_code = "";
 	var tab_level = 0;
 	var literal_start = false;
 	var ppdfn_start = false; 
 	var pstack = [];
+	var rmv_list = [];
 	var tab_level= 0;
 	var literal_start = false;
+	var select_begin = false;
 
 	if (tab_type = 0){
 		tab_code = "\t";
@@ -20,50 +22,136 @@ function convert(in_text, tab_type){
 
 	for (var i = 0; i < arr_text.length; i++) {
 		var chr = arr_text[i];
+		console.log("token = " + token);
+		console.log("out_text = " + out_text);
 		if (literal_start){
-
+			switch (chr){
+				case '"':
+					if (i < arr_text.length - 1 
+						&& arr_text[i + 1] == '"'){
+						out_text += '"';
+						i++;
+					}else{
+						out_text += "'";
+						literal_start = false;
+					}
+					break;
+				case "[":
+					if (operator_kw == "LIKE" 
+						&& arr_text[i + 1] == "*"
+						&& arr_text[i + 2] == "]") {
+						out_text += "*";
+						i += 2;
+					}else if(operator_kw == "LIKE" 
+						&& arr_text[i + 1] == "?"
+						&& arr_text[i + 2] == "]"){
+						out_text += "?";
+						i += 2;
+					}else{
+						out_text += chr;
+					}
+					break;
+				case "*":
+					if (operator_kw == "LIKE"){
+						out_text += "%";
+					}else{
+						out_text += chr;
+					}
+					break;
+				case "?":
+					if (operator_kw == "LIKE"){
+						out_text += "_";
+					}else{
+						out_text += chr;
+					}
+					break;
+				default:
+					out_text += chr;
+			}
 		}else{
 			switch (chr){
 				case " ":
-					if (primary_kw.indexOf(buf_kw.toUpperCase()) >= 0){
-						section_kw = buf_kw.toUpperCase();
+				case "\n":
+					if (primary_kw.indexOf(token.toUpperCase()) >= 0){
+						section_kw = token.toUpperCase();
 						if (out_text == ""){
 							out_text = section_kw + chr;
 						}else{
 							out_text += "\n" + section_kw + chr;
 						}
-					}else if (section_kw.indexOf(buf_kw.toUpperCase()) >= 0){
-						operator_kw = buf_kw.toUpperCase();
-						if (operator_kw == "INNER" ||
-							operator_kw == "LEFT" ||
-							operator_kw == "RIGHT"){
-							out_text += "\n" + tab_code.repeat(tab_level + 1) + operator_kw + chr;
-						}else if (operator_kw == "ON"){
-							out_text += "\n" + tab_code.repeat(tab_level + 2) + operator_kw + chr;
+						if (section_kw == "SELECT"){
+							select_begin = true;
+						}
+					}else if (secondary_kw.indexOf(token.toUpperCase()) >= 0){
+						operator_kw = token.toUpperCase();
+						switch (operator_kw){
+							case "INNER":
+							case "LEFT":
+							case "RIGHT":
+								out_text += "\n" + tab_code.repeat(tab_level + 1)
+								 + operator_kw + chr;
+								break;
+							case "ON":
+								out_text += "\n" + tab_code.repeat(tab_level + 2)
+								 + operator_kw + chr;
+								break;
+							case "AND":
+							case "OR":
+								pstack.pop;
+							default:
+								out_text += operator_kw + chr;
+								break;
 						}
 					}else{
-						out_text += buf_kw + chr;
+						if (chr == " "){
+							out_text += token + chr;	
+						}else{
+							out_text += token;
+						}
+						
 					}
-					buf_kw = "";
+					token = "";
 					break;
 				case "(":
-					if (ppdfn_kw.indexOf(buf_kw.toUpperCase() >= 0)){
+					if (ppdfn_kw.indexOf(token.toUpperCase() >= 0)){
 						ppdfn_start = true;
 					}
 					pstack.push(i);
-					out_text += buf_kw + chr;
-					buf_kw = "";
+					out_text += token + chr;
+					token = "";
 					break;
 				case ")":
-					
+					if (pstack.length > 0){
+						rmv_list.push(pstack[pstack.length-1]);
+						pstack.pop();
+						rmv_list.push(i);
+					}
 					break;
 				case ",":
 					if (ppdfn_start){
-						out_text += chr;
+						out_text += token + chr;
 					}else{
-						out_text += "\n " + chr; 
+						if (select_begin){
+							out_text += "\n" 
+							 + tab_code.repeat(tab_level + 1) + token + "\n"
+							 + tab_code.repeat(tab_level + 1) + chr + " "; 
+							select_begin = false;
+						}else{
+						out_text += token + "\n"
+						 + tab_code.repeat(tab_level + 1) + chr + " "; 
+						}
 					}
+					token = "";
 					break;
+				case '"':
+					literal_start = true;
+					out_text += token + "'";
+					break;
+				default:
+					token += chr;
+					if (i == arr_text.length - 1){
+						out_text += token;
+					}
 			}
 		}
 	};
