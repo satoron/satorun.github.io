@@ -12,7 +12,6 @@ function convert(in_text, tab_type){
 	var rmv_list = [];
 	var tab_level= 0;
 	var literal_start = false;
-	var select_begin = false;
 
 	if (tab_type = 0){
 		tab_code = "\t";
@@ -79,20 +78,17 @@ function convert(in_text, tab_type){
 						}else{
 							out_text += "\n" + section_kw + chr;
 						}
-						if (section_kw == "SELECT"){
-							select_begin = true;
-						}
 					}else if (secondary_kw.indexOf(token.toUpperCase()) >= 0){
 						operator_kw = token.toUpperCase();
 						switch (operator_kw){
 							case "INNER":
 							case "LEFT":
 							case "RIGHT":
-								out_text += "\n" + tab_code.repeat(tab_level + 1)
+								out_text += "\n" + tab_code.repeat(1)
 								 + operator_kw + chr;
 								break;
 							case "ON":
-								out_text += "\n" + tab_code.repeat(tab_level + 2)
+								out_text += "\n" + tab_code.repeat(2)
 								 + operator_kw + chr;
 								break;
 							case "AND":
@@ -131,15 +127,8 @@ function convert(in_text, tab_type){
 					if (ppdfn_start){
 						out_text += token + chr;
 					}else{
-						if (select_begin){
-							out_text += "\n" 
-							 + tab_code.repeat(tab_level + 1) + token + "\n"
-							 + tab_code.repeat(tab_level + 1) + chr + " "; 
-							select_begin = false;
-						}else{
 						out_text += token + "\n"
-						 + tab_code.repeat(tab_level + 1) + chr + " "; 
-						}
+						 + tab_code.repeat(1) + chr + " "; 
 					}
 					token = "";
 					break;
